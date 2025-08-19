@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  Action, AnyAction, Reducer
-} from 'redux'
+import { Action, AnyAction, Reducer } from 'redux'
 
 import {
   FLUSH,
@@ -13,6 +11,7 @@ import {
 } from './constants'
 
 import type {
+  KeyAccessState,
   PersistConfig,
   PersistState,
   Persistoid,
@@ -23,14 +22,17 @@ import createPersistoid from './createPersistoid'
 import defaultGetStoredState from './getStoredState'
 import purgeStoredState from './purgeStoredState'
 
-type PersistPartial = { _persist: PersistState } | any;
+type PersistPartial = { _persist: PersistState } | any
 const DEFAULT_TIMEOUT = 5000
 /*
   @TODO add validation / handling for:
   - persisting a reducer which has nested _persist
   - handling actions that fire before reydrate is called
 */
-export default function persistReducer<S, A extends Action>(
+export default function persistReducer<
+  S extends KeyAccessState,
+  A extends Action,
+>(
   config: PersistConfig<S>,
   baseReducer: Reducer<S, A>
 ): Reducer<S & PersistPartial, AnyAction> {
@@ -113,7 +115,7 @@ export default function persistReducer<S, A extends Action>(
         return {
           ...baseReducer(restState, action),
           _persist,
-        };
+        }
       }
 
       if (
@@ -127,15 +129,15 @@ export default function persistReducer<S, A extends Action>(
       action.register(config.key)
 
       getStoredState(config).then(
-        restoredState => {
+        (restoredState) => {
           if (restoredState) {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const migrate = config.migrate || ((s, _) => Promise.resolve(s))
             migrate(restoredState as any, version).then(
-              migratedState => {
+              (migratedState) => {
                 _rehydrate(migratedState)
               },
-              migrateErr => {
+              (migrateErr) => {
                 if (process.env.NODE_ENV !== 'production' && migrateErr)
                   console.error('redux-persist: migration error', migrateErr)
                 _rehydrate(undefined, migrateErr)
@@ -143,7 +145,7 @@ export default function persistReducer<S, A extends Action>(
             )
           }
         },
-        err => {
+        (err) => {
           _rehydrate(undefined, err)
         }
       )
@@ -182,7 +184,7 @@ export default function persistReducer<S, A extends Action>(
         // only reconcile state if stateReconciler and inboundState are both defined
         const reconciledRest: S =
           stateReconciler !== false && inboundState !== undefined
-            ? stateReconciler(inboundState, state, reducedState, config)
+            ? stateReconciler(inboundState, state as S, reducedState, config)
             : reducedState
 
         const newState = {
