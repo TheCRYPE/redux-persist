@@ -4,5 +4,5 @@
 */
 
 export default function hardSet<S>(inboundState: S): S {
-  return inboundState
+  return inboundState;
 }

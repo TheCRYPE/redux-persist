@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type TransformConfig = {
-  whitelist?: Array<string>
-  blacklist?: Array<string>
-}
+  whitelist?: Array<string>;
+  blacklist?: Array<string>;
+};
 
 export default function createTransform(
   // @NOTE inbound: transform state coming from redux on its way to being serialized and stored
@@ -13,13 +13,13 @@ export default function createTransform(
   outbound: Function,
   config: TransformConfig = {}
 ): any {
-  const whitelist = config.whitelist || null
-  const blacklist = config.blacklist || null
+  const whitelist = config.whitelist || null;
+  const blacklist = config.blacklist || null;
 
   function whitelistBlacklistCheck(key: string) {
-    if (whitelist && whitelist.indexOf(key) === -1) return true
-    if (blacklist && blacklist.indexOf(key) !== -1) return true
-    return false
+    if (whitelist && whitelist.indexOf(key) === -1) return true;
+    if (blacklist && blacklist.indexOf(key) !== -1) return true;
+    return false;
   }
 
   return {
@@ -39,5 +39,5 @@ export default function createTransform(
       !whitelistBlacklistCheck(key) && outbound
         ? outbound(state, key, fullState)
         : state,
-  }
+  };
 }
