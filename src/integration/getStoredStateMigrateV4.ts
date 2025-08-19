@@ -1,20 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import getStoredStateV5 from '../getStoredState'
 
-import type { KeyAccessState, PersistConfig, Storage, Transform } from '../types'
+import type {
+  KeyAccessState,
+  PersistConfig,
+  Storage,
+  Transform,
+} from '../types'
 
 type V4Config = {
-  storage?: Storage,
-  serialize: boolean,
-  keyPrefix?: string,
-  transforms?: Array<Transform<any, any>>,
-  blacklist?: Array<string>,
-  whitelist?: Array<string>,
+  storage?: Storage
+  serialize: boolean
+  keyPrefix?: string
+  transforms?: Array<Transform<any, any>>
+  blacklist?: Array<string>
+  whitelist?: Array<string>
 }
 
 export default function getStoredState(v4Config: V4Config) {
-  return function(v5Config: PersistConfig<any>): any {
-    return getStoredStateV5(v5Config).then(state => {
+  return function (v5Config: PersistConfig<any>): any {
+    return getStoredStateV5(v5Config).then((state) => {
       if (state) return state
       else return getStoredStateV4(v4Config)
     })
@@ -53,13 +58,13 @@ const noStorage = {
   setItem: noop,
   removeItem: noop,
   getAllKeys: noop,
-  keys: []
+  keys: [],
 }
 const createAsyncLocalStorage = () => {
   if (!hasLocalStorage()) return noStorage
   const localStorage = self.localStorage
   return {
-    getAllKeys: function(cb: any) {
+    getAllKeys: function (cb: any) {
       try {
         const keys = []
         for (let i = 0; i < localStorage.length; i++) {
@@ -94,7 +99,7 @@ const createAsyncLocalStorage = () => {
         cb(e)
       }
     },
-    keys: localStorage.keys
+    keys: localStorage.keys,
   }
 }
 
@@ -118,7 +123,7 @@ function getStoredStateV4(v4Config: V4Config) {
     const restoredState: KeyAccessState = {}
     let completionCount = 0
 
-    storage.getAllKeys((err: any, allKeys:string[] = []) => {
+    storage.getAllKeys((err: any, allKeys: string[] = []) => {
       if (err) {
         if (process.env.NODE_ENV !== 'production')
           console.warn(
@@ -128,24 +133,27 @@ function getStoredStateV4(v4Config: V4Config) {
       }
 
       const persistKeys = allKeys
-        .filter(key => key.indexOf(keyPrefix) === 0)
-        .map(key => key.slice(keyPrefix.length))
+        .filter((key) => key.indexOf(keyPrefix) === 0)
+        .map((key) => key.slice(keyPrefix.length))
       const keysToRestore = persistKeys.filter(passWhitelistBlacklist)
 
       const restoreCount = keysToRestore.length
       if (restoreCount === 0) resolve(undefined)
-      keysToRestore.forEach(key => {
-        storage.getItem(createStorageKey(key), (err: any, serialized: string) => {
-          if (err && process.env.NODE_ENV !== 'production')
-            console.warn(
-              'redux-persist/getStoredState: Error restoring data for key:',
-              key,
-              err
-            )
-          else restoredState[key] = rehydrate(key, serialized)
-          completionCount += 1
-          if (completionCount === restoreCount) resolve(restoredState)
-        })
+      keysToRestore.forEach((key) => {
+        storage.getItem(
+          createStorageKey(key),
+          (err: any, serialized: string) => {
+            if (err && process.env.NODE_ENV !== 'production')
+              console.warn(
+                'redux-persist/getStoredState: Error restoring data for key:',
+                key,
+                err
+              )
+            else restoredState[key] = rehydrate(key, serialized)
+            completionCount += 1
+            if (completionCount === restoreCount) resolve(restoredState)
+          }
+        )
       })
     })
 

@@ -3,14 +3,14 @@ import React, { PureComponent, ReactNode } from 'react'
 import type { Persistor } from '../types'
 
 type Props = {
-  onBeforeLift?: () => void,
-  children: ReactNode | ((state: boolean) => ReactNode),
-  loading: ReactNode,
-  persistor: Persistor,
+  onBeforeLift?: () => void
+  children: ReactNode | ((state: boolean) => ReactNode)
+  loading: ReactNode
+  persistor: Persistor
 }
 
 type State = {
-  bootstrapped: boolean,
+  bootstrapped: boolean
 }
 
 export class PersistGate extends PureComponent<Props, State> {
@@ -36,8 +36,9 @@ export class PersistGate extends PureComponent<Props, State> {
     const { bootstrapped } = persistor.getState()
     if (bootstrapped) {
       if (this.props.onBeforeLift) {
-        Promise.resolve(this.props.onBeforeLift())
-          .finally(() => this.setState({ bootstrapped: true }))
+        Promise.resolve(this.props.onBeforeLift()).finally(() =>
+          this.setState({ bootstrapped: true })
+        )
       } else {
         this.setState({ bootstrapped: true })
       }

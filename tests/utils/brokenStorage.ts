@@ -14,5 +14,5 @@ export default {
   getAllKeys(): Promise<void> {
     return new Promise((resolve: Function, reject: Function) => {})
   },
-  keys: []
+  keys: [],
 }

@@ -16,7 +16,9 @@ function hasStorage(storageType: string) {
   }
 
   try {
-    const storage = (self as unknown as { [key: string]: Storage})[storageType] as unknown as Storage
+    const storage = (self as unknown as { [key: string]: Storage })[
+      storageType
+    ] as unknown as Storage
     const testKey = `redux-persist ${storageType} test`
     storage.setItem(testKey, 'test')
     storage.getItem(testKey)
@@ -33,7 +35,8 @@ function hasStorage(storageType: string) {
 
 export default function getStorage(type: string): Storage {
   const storageType = `${type}Storage`
-  if (hasStorage(storageType)) return (self as unknown as { [key: string]: Storage })[storageType]
+  if (hasStorage(storageType))
+    return (self as unknown as { [key: string]: Storage })[storageType]
   else {
     if (process.env.NODE_ENV !== 'production') {
       console.error(

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type TransformConfig = {
-  whitelist?: Array<string>,
-  blacklist?: Array<string>,
+  whitelist?: Array<string>
+  blacklist?: Array<string>
 }
 
 export default function createTransform(
@@ -23,11 +23,19 @@ export default function createTransform(
   }
 
   return {
-    in: (state: Record<string, unknown>, key: string, fullState: Record<string, unknown>) =>
+    in: (
+      state: Record<string, unknown>,
+      key: string,
+      fullState: Record<string, unknown>
+    ) =>
       !whitelistBlacklistCheck(key) && inbound
         ? inbound(state, key, fullState)
         : state,
-    out: (state: Record<string, unknown>, key: string, fullState: Record<string, unknown>) =>
+    out: (
+      state: Record<string, unknown>,
+      key: string,
+      fullState: Record<string, unknown>
+    ) =>
       !whitelistBlacklistCheck(key) && outbound
         ? outbound(state, key, fullState)
         : state,

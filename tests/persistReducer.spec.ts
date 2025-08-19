@@ -10,22 +10,22 @@ const reducer = () => ({})
 const config = {
   key: 'persist-reducer-test',
   version: 1,
-  storage: createMemoryStorage()
+  storage: createMemoryStorage(),
 }
 
-test('persistedReducer does not automatically set _persist state', t => {
+test('persistedReducer does not automatically set _persist state', (t) => {
   const persistedReducer = persistReducer(config, reducer)
-  const state = persistedReducer({}, {type: "UNDEFINED"})
+  const state = persistedReducer({}, { type: 'UNDEFINED' })
   console.log('state', state)
   t.is(undefined, state._persist)
 })
 
-test('persistedReducer does returns versioned, rehydrate tracked _persist state upon PERSIST', t => {
+test('persistedReducer does returns versioned, rehydrate tracked _persist state upon PERSIST', (t) => {
   const persistedReducer = persistReducer(config, reducer)
   const register = sinon.spy()
   const rehydrate = sinon.spy()
   const state = persistedReducer({}, { type: PERSIST, register, rehydrate })
-  t.deepEqual({ version: 1, rehydrated: false}, state._persist)
+  t.deepEqual({ version: 1, rehydrated: false }, state._persist)
 })
 
 test('persistedReducer calls register and rehydrate after PERSIST', async (t) => {

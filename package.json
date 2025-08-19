@@ -1,5 +1,4 @@
 {
-  "type": "module",
   "name": "redux-persist",
   "version": "6.1.1",
   "description": "persist and rehydrate redux stores",
@@ -23,6 +22,7 @@
     "build:umd": "rollup -c",
     "clean": "rimraf dist && rimraf es && rimraf lib",
     "prepare": "npm run build",
+    "prettier:write": "prettier --write .",
     "precommit": "lint-staged",
     "stats:size": "node ./scripts/size-estimator.js",
     "test": "ava",
