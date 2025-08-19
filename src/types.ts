@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { REHYDRATE, REGISTER } from './constants'
+import { REHYDRATE, REGISTER } from "./constants";
 
 import { StoreEnhancer } from "redux";
 
@@ -9,15 +9,23 @@ export interface PersistState {
   rehydrated: boolean;
 }
 
-export type PersistedState = {
-  _persist: PersistState;
-} | undefined;
+export type PersistedState =
+  | {
+      _persist: PersistState;
+    }
+  | undefined;
 
-export type PersistMigrate =
-  (state: PersistedState, currentVersion: number) => Promise<PersistedState>;
+export type PersistMigrate = (
+  state: PersistedState,
+  currentVersion: number
+) => Promise<PersistedState>;
 
-export type StateReconciler<S> =
-  (inboundState: any, state: S, reducedState: S, config: PersistConfig<S>) => S;
+export type StateReconciler<S> = (
+  inboundState: any,
+  state: S,
+  reducedState: S,
+  config: PersistConfig<S>
+) => S;
 
 export interface KeyAccessState {
   [key: string]: any;
@@ -47,7 +55,9 @@ export interface PersistConfig<S, RS = any, HSS = any, ESS = any> {
   /**
    * @desc Used for migrations.
    */
-  getStoredState?: (config: PersistConfig<S, RS, HSS, ESS>) => Promise<PersistedState>;
+  getStoredState?: (
+    config: PersistConfig<S, RS, HSS, ESS>
+  ) => Promise<PersistedState>;
   debug?: boolean;
   serialize?: boolean;
   deserialize?: boolean | ((x: any) => any);
@@ -93,8 +103,11 @@ export interface MigrationManifest {
  * `ESS` means EndSubState
  * `S` means State
  */
-export type TransformInbound<SS, ESS, S = any> =
-  (subState: SS, key: keyof S, state: S) => ESS;
+export type TransformInbound<SS, ESS, S = any> = (
+  subState: SS,
+  key: keyof S,
+  state: S
+) => ESS;
 
 /**
  * @desc
@@ -102,8 +115,11 @@ export type TransformInbound<SS, ESS, S = any> =
  * `HSS` means HydratedSubState
  * `RS` means RawState
  */
-export type TransformOutbound<SS, HSS, RS = any> =
-  (state: SS, key: keyof RS, rawState: RS) => HSS;
+export type TransformOutbound<SS, HSS, RS = any> = (
+  state: SS,
+  key: keyof RS,
+  rawState: RS
+) => HSS;
 
 export interface Transform<HSS, ESS, S = any, RS = any> {
   in: TransformInbound<HSS, ESS, S>;
@@ -129,10 +145,7 @@ export interface RegisterAction {
   key: string;
 }
 
-export type PersistorAction =
-  | RehydrateAction
-  | RegisterAction
-;
+export type PersistorAction = RehydrateAction | RegisterAction;
 
 export interface PersistorState {
   registry: Array<string>;
