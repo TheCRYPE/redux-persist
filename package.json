@@ -22,7 +22,7 @@
     "build:umd": "rollup -c",
     "clean": "rimraf dist && rimraf es && rimraf lib",
     "prepare": "npm run build",
-    "prettier:write": "prettier --write .",
+    "prettier:write": "prettier --write ./src/ ./tests/ ./types/ ./scripts/",
     "precommit": "lint-staged",
     "stats:size": "node ./scripts/size-estimator.js",
     "test": "ava",
